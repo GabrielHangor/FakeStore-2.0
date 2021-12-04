@@ -1,3 +1,16 @@
 main {
   min-height: 80vh;
 }
+
+.card-title {
+  height: 45px;
+  overflow: hidden;
+}
+
+.rating {
+  padding: 1rem 0;
+}
+
+.rating span {
+  margin: 0.2rem;
+}
