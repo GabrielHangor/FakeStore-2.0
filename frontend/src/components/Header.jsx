@@ -14,13 +14,13 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               <LinkContainer to="/cart">
-                <Nav.Link>
+                <Nav.Link active={false}>
                   <i className="fas  fa-shopping-cart px-2"></i>
                   Корзина
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/login">
-                <Nav.Link>
+                <Nav.Link active={false}>
                   <i className="fas fa-user px-2"></i>
                   Авторизация
                 </Nav.Link>
