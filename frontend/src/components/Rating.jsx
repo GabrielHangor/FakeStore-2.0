@@ -4,70 +4,19 @@ const Rating = ({ value, text, color }) => {
   return (
     <div className="rating">
       <span>
-        <i
-          style={{ color }}
-          className={
-            value >= 1
+        {[...Array(5)].map((_, i) => {
+          const classname =
+            value >= i + 1
               ? 'fas fa-star'
-              : value >= 0.5
+              : value >= i + 0.5
               ? 'fas fa-star-half-alt'
-              : 'far fa-star'
-          }
-        ></i>
-      </span>
-      <span>
-        <i
-          style={{ color }}
-          className={
-            value >= 2
-              ? 'fas fa-star'
-              : value >= 1.5
-              ? 'fas fa-star-half-alt'
-              : 'far fa-star'
-          }
-        ></i>
-      </span>
-      <span>
-        <i
-          style={{ color }}
-          className={
-            value >= 3
-              ? 'fas fa-star'
-              : value >= 2.5
-              ? 'fas fa-star-half-alt'
-              : 'far fa-star'
-          }
-        ></i>
-      </span>
-      <span>
-        <i
-          style={{ color }}
-          className={
-            value >= 4
-              ? 'fas fa-star'
-              : value >= 3.5
-              ? 'fas fa-star-half-alt'
-              : 'far fa-star'
-          }
-        ></i>
-      </span>
-      <span>
-        <i
-          style={{ color }}
-          className={
-            value >= 5
-              ? 'fas fa-star'
-              : value >= 4.5
-              ? 'fas fa-star-half-alt'
-              : 'far fa-star'
-          }
-        ></i>
+              : 'far fa-star';
+          return <i key={'Star' + i} style={{ color }} className={classname} />;
+        })}
       </span>
       <span className="px-2">{text && text}</span>
     </div>
   );
 };
-
-Rating.defaultProps = { color: '#ffc565' };
 
 export default Rating;
