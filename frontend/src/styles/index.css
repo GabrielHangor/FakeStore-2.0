@@ -16,5 +16,5 @@ main {
 }
 
 body {
-  overflow-y: overlay;
+  overflow-y: scroll;
 }
