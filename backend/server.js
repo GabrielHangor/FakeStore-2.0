@@ -1,9 +1,9 @@
 import express from 'express';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 import connectToDB from './config/db.js';
 import products from './data/products.js';
 
-config();
+dotenv.config();
 
 connectToDB();
 
