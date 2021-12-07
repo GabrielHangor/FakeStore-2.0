@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectToDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
@@ -10,6 +11,10 @@ connectToDB();
 const app = express();
 
 app.use('/api/products', productRoutes);
+
+app.use(notFound);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

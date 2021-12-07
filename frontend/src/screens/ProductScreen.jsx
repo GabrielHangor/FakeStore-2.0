@@ -5,8 +5,8 @@ import Rating from '../components/Rating';
 import axios from 'axios';
 
 const ProductScreen = () => {
-  const params = useParams();
   const [product, setProduct] = useState({});
+  const params = useParams();
 
   useEffect(() => {
     const fetchProduct = async () => {
