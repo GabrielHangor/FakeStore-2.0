@@ -1,3 +1,9 @@
+body {
+  overflow-y: scroll;
+  margin: 0;
+  padding: 0;
+}
+
 main {
   min-height: 80vh;
 }
@@ -15,6 +21,26 @@ main {
   margin: 0.1rem;
 }
 
-body {
-  overflow-y: scroll;
+a {
+  text-decoration: none;
+  color: var(--bs-body-color);
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 1.8rem;
+  padding: 1rem 0;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.4rem;
+  padding: 0.5rem;
+  margin: 0;
+}
+
+h3 {
+  font-size: 1rem;
+  padding: 0.5rem;
+  margin: 0;
 }
