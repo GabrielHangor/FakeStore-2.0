@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Row,
   Col,
@@ -17,11 +17,11 @@ import {
 } from '../actions/productActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import { addToCartAction } from './../actions/cartActions';
 
 const ProductScreen = () => {
   const [quantity, setQuantity] = useState(1);
   const params = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
@@ -31,10 +31,6 @@ const ProductScreen = () => {
 
     return () => dispatch(clearProductDetailsAction());
   }, [dispatch, params]);
-
-  const addToCartHandler = () => {
-    navigate(`../cart/${params.id}?quantity=${quantity}`);
-  };
 
   return (
     <>
@@ -106,7 +102,9 @@ const ProductScreen = () => {
                 )}
                 <ListGroup.Item>
                   <Button
-                    onClick={addToCartHandler}
+                    onClick={() =>
+                      dispatch(addToCartAction(params.id, quantity))
+                    }
                     className="w-100"
                     disabled={product.countInStock === 0}
                     size="lg"

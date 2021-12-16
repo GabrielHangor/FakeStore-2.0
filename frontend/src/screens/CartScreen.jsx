@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Link, useParams, useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Row,
@@ -14,24 +14,11 @@ import Message from '../components/Message';
 import { addToCartAction } from '../actions/cartActions';
 
 const CartScreen = () => {
-  const params = useParams();
-  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-
-  const productId = params.id;
-  const quantity = location.search
-    ? Number(new URLSearchParams(location.search).get('quantity'))
-    : 1;
-
-  useEffect(() => {
-    if (productId) {
-      dispatch(addToCartAction(productId, quantity));
-    }
-  }, [dispatch, productId, quantity]);
 
   const removeFromCartHandler = (id) => {
     console.log('remove');
@@ -45,7 +32,7 @@ const CartScreen = () => {
     <Row>
       <Col md={8}>
         <h1>Корзина</h1>
-        <Link className="btn btn-light" to="/">
+        <Link className="btn btn-light my-2" to="/">
           Назад
         </Link>
         {cartItems.length === 0 ? (
@@ -53,7 +40,7 @@ const CartScreen = () => {
         ) : (
           <ListGroup variant="flush">
             {cartItems.map((item) => (
-              <ListGroup.Item key={item.product}>
+              <ListGroup.Item key={item.id}>
                 <Row className="align-items-center">
                   <Col md={2}>
                     <Image
@@ -64,7 +51,7 @@ const CartScreen = () => {
                     ></Image>
                   </Col>
                   <Col md={3}>
-                    <Link to={`/product/${item.product}`}>{item.name}</Link>
+                    <Link to={`/product/${item.id}`}>{item.name}</Link>
                   </Col>
                   <Col md={2}>${item.price}</Col>
                   <Col md={2}>
@@ -73,7 +60,7 @@ const CartScreen = () => {
                       value={item.quantity}
                       onChange={(e) =>
                         dispatch(
-                          addToCartAction(item.product, Number(e.target.value))
+                          addToCartAction(item.id, Number(e.target.value))
                         )
                       }
                     >
@@ -88,7 +75,7 @@ const CartScreen = () => {
                     <Button
                       type="button"
                       variant="light"
-                      onClick={() => removeFromCartHandler(item.product)}
+                      onClick={() => removeFromCartHandler(item.id)}
                     >
                       <i className="fas fa-trash"></i>
                     </Button>
