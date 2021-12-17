@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   Row,
   Col,
@@ -8,6 +8,7 @@ import {
   Card,
   Button,
   Form,
+  Modal,
 } from 'react-bootstrap';
 import Rating from '../components/Rating';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +22,7 @@ import { addToCartAction } from './../actions/cartActions';
 
 const ProductScreen = () => {
   const [quantity, setQuantity] = useState(1);
+  const [showModal, setShowModal] = useState(false);
   const params = useParams();
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
@@ -32,8 +34,38 @@ const ProductScreen = () => {
     return () => dispatch(clearProductDetailsAction());
   }, [dispatch, params]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowModal(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [showModal]);
+
+  const addToCartHandler = () => {
+    dispatch(addToCartAction(params.id, quantity));
+    setShowModal(true);
+  };
+
   return (
     <>
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Body>
+          <h3>
+            {product.name} добавлен в корзину в количестве {quantity} шт.
+          </h3>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setShowModal(false)}>Закрыть</Button>
+        </Modal.Footer>
+      </Modal>
+      <Link className="btn btn-light my-3" to="/">
+        К списку товаров
+      </Link>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -45,9 +77,7 @@ const ProductScreen = () => {
           </Col>
           <Col md={6}>
             <ListGroup variant="flush">
-              <ListGroup.Item>
-                <h3>{product.name}</h3>
-              </ListGroup.Item>
+              <ListGroup.Item>{product.name}</ListGroup.Item>
               <ListGroup.Item>
                 <Rating
                   value={product.rating}
@@ -88,7 +118,7 @@ const ProductScreen = () => {
                         <Form.Control
                           as="select"
                           value={quantity}
-                          onChange={(e) => setQuantity(e.target.value)}
+                          onChange={(e) => setQuantity(Number(e.target.value))}
                         >
                           {[...Array(product.countInStock).keys()].map((el) => (
                             <option key={el + 1} value={el + 1}>
@@ -102,9 +132,7 @@ const ProductScreen = () => {
                 )}
                 <ListGroup.Item>
                   <Button
-                    onClick={() =>
-                      dispatch(addToCartAction(params.id, quantity))
-                    }
+                    onClick={addToCartHandler}
                     className="w-100"
                     disabled={product.countInStock === 0}
                     size="lg"

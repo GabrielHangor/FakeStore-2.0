@@ -11,7 +11,7 @@ import {
   Card,
 } from 'react-bootstrap';
 import Message from '../components/Message';
-import { addToCartAction } from '../actions/cartActions';
+import { addToCartAction, removeFromCartAction } from '../actions/cartActions';
 
 const CartScreen = () => {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ const CartScreen = () => {
   const { cartItems } = cart;
 
   const removeFromCartHandler = (id) => {
-    console.log('remove');
+    dispatch(removeFromCartAction(id));
   };
 
   const checkOutHandler = () => {
@@ -33,7 +33,7 @@ const CartScreen = () => {
       <Col md={8}>
         <h1>Корзина</h1>
         <Link className="btn btn-light my-2" to="/">
-          Назад
+          К списку товаров
         </Link>
         {cartItems.length === 0 ? (
           <Message>Корзина пуста </Message>
