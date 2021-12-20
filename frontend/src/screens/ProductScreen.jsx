@@ -59,9 +59,6 @@ const ProductScreen = () => {
             {product.name} добавлен в корзину в количестве {quantity} шт.
           </h3>
         </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setShowModal(false)}>Закрыть</Button>
-        </Modal.Footer>
       </Modal>
       <Link className="btn btn-light my-3" to="/">
         К списку товаров
