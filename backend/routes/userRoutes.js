@@ -8,7 +8,7 @@ import { protectRoute } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// routes handling user authentication
+// routes handling user authentication/registration
 
 router.route('/').post(registerUser);
 router.route('/login').post(authUser);
