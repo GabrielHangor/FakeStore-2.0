@@ -6,6 +6,7 @@ import Message from './../components/Message';
 import Loader from './../components/Loader';
 import FormContainer from '../components/FormContainer';
 import { registerAction } from '../actions/userActions';
+import { USER_LOGOUT } from '../reducers/userReducers';
 
 const RegisterScreen = () => {
   const [name, setName] = useState('');
@@ -27,10 +28,21 @@ const RegisterScreen = () => {
     if (userInfo) navigate(redirect);
   }, [userInfo, redirect, navigate]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (error) {
+        dispatch({ type: USER_LOGOUT });
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [error, dispatch]);
+
   const submitHandler = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setMessage('Пароли не совпадают');
+      setTimeout(() => setMessage(null), 3000);
     } else {
       dispatch(registerAction(name, email, password));
     }

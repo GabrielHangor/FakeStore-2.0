@@ -6,6 +6,7 @@ import Message from './../components/Message';
 import Loader from './../components/Loader';
 import FormContainer from '../components/FormContainer';
 import { loginAction } from '../actions/userActions';
+import { USER_LOGOUT } from '../reducers/userReducers';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -23,6 +24,16 @@ const LoginScreen = () => {
   useEffect(() => {
     if (userInfo) navigate(redirect);
   }, [userInfo, redirect, navigate]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (error) {
+        dispatch({ type: USER_LOGOUT });
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [error, dispatch]);
 
   const submitHandler = (e) => {
     e.preventDefault();
