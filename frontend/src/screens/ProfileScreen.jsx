@@ -4,8 +4,11 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from './../components/Message';
 import Loader from './../components/Loader';
-import { getUserDetailsAction } from '../actions/userActions';
-import { USER_LOGOUT } from '../reducers/userReducers';
+import {
+  getUserDetailsAction,
+  updateUserProfileAction,
+} from '../actions/userActions';
+import { USER_UPDATE_PROFILE_RESET } from './../reducers/userReducers';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -18,14 +21,17 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
 
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
+  const { error, user } = userDetails;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+  const { loading, success } = userUpdateProfile;
 
   useEffect(() => {
     if (!userInfo) navigate('/login');
 
-    if (!user.name) {
+    if (!user || !user.name) {
       dispatch(getUserDetailsAction('profile'));
     } else {
       setName(user.name);
@@ -33,15 +39,22 @@ const ProfileScreen = () => {
     }
   }, [userInfo, user, dispatch, navigate]);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if (error) {
-  //       dispatch({ type: USER_LOGOUT });
-  //     }
-  //   }, 3000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (success) {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
+      }
+    }, 3000);
 
-  //   return () => clearTimeout(timer);
-  // }, [error, dispatch]);
+    // refactor later
+    if (success) {
+      dispatch(getUserDetailsAction('profile'));
+      setName(user.name);
+      setEmail(user.email);
+    }
+
+    return () => clearTimeout(timer);
+  }, [success, dispatch]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -49,7 +62,9 @@ const ProfileScreen = () => {
       setMessage('Пароли не совпадают');
       setTimeout(() => setMessage(null), 3000);
     } else {
-      // DISPATCH UPDATE PROFILE
+      dispatch(
+        updateUserProfileAction({ id: user._id, name, email, password })
+      );
     }
   };
 
@@ -59,6 +74,9 @@ const ProfileScreen = () => {
         <h2>Профиль</h2>
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
+        {success && (
+          <Message variant="success">Данные профиля обновлены</Message>
+        )}
         {loading ? (
           <Loader />
         ) : (
@@ -78,7 +96,6 @@ const ProfileScreen = () => {
             <Form.Group controlId="email">
               <Form.Label>Электронная почта</Form.Label>
               <Form.Control
-                required
                 className="mb-2"
                 type="email"
                 placeholder="Введите эл. адрес"
@@ -90,7 +107,6 @@ const ProfileScreen = () => {
             <Form.Group controlId="password">
               <Form.Label>Пароль</Form.Label>
               <Form.Control
-                required
                 className="mb-2"
                 type="password"
                 placeholder="Введите новый пароль"
@@ -102,7 +118,6 @@ const ProfileScreen = () => {
             <Form.Group controlId="confirmPassword">
               <Form.Label>Подтвердите пароль</Form.Label>
               <Form.Control
-                required
                 className="mb-2"
                 type="password"
                 placeholder="Подтвердите пароль"
