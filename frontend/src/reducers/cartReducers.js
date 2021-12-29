@@ -1,7 +1,12 @@
 export const CART_ADD_ITEM = 'CART_ADD_ITEM';
 export const CART_REMOVE_ITEM = 'CART_REMOVE_ITEM';
 
-export const cartReducer = (state = { cartItems: [] }, action) => {
+export const CART_SAVE_SHIPPING_ADDRESS = 'CART_SAVE_SHIPPING_ADRESS';
+
+export const cartReducer = (
+  state = { cartItems: [], shippingAddress: {} },
+  action
+) => {
   switch (action.type) {
     case CART_ADD_ITEM:
       const existItem = state.cartItems.find((x) => x.id === action.payload.id);
@@ -22,6 +27,9 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
         ...state,
         cartItems: state.cartItems.filter((item) => item.id !== action.payload),
       };
+
+    case CART_SAVE_SHIPPING_ADDRESS:
+      return { ...state, shippingAddress: action.payload };
 
     default:
       return state;
