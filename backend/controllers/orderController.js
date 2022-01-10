@@ -18,7 +18,6 @@ const addOrderItems = expressAsyncHandler(async (req, res) => {
   if (orderItems && orderItems.length === 0) {
     res.status(400);
     throw new Error('Товары в корзине отсутствуют');
-    return;
   }
 
   const order = new Order({

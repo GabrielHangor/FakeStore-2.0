@@ -4,10 +4,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from './../components/Message';
+import { orderCreateAction } from '../actions/orderActions';
+import {
+  ORDER_CREATE_CLEAN_ERROR,
+  ORDER_CREATE_CLEAN_SUCCESS,
+} from '../reducers/orderReducers';
 
 const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const cart = useSelector((state) => state.cart);
+
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, loading, error } = orderCreate;
 
   // Calculate prices
   const itemsPrice = cart.cartItems.reduce(
@@ -18,7 +28,38 @@ const PlaceOrderScreen = () => {
   const taxPrice = 0.2 * itemsPrice;
   const totalPrice = itemsPrice + shippingPrice + taxPrice;
 
-  const placeOrderHandler = () => {};
+  useEffect(() => {
+    if (success) navigate(`/order/${order._id}`);
+  }, [success, navigate, order]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (error) {
+        dispatch({ type: ORDER_CREATE_CLEAN_ERROR });
+      }
+
+      // cleanup success in state
+      // if (success) {
+      //   dispatch({ type: ORDER_CREATE_CLEAN_SUCCESS });
+      // }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [error, dispatch]);
+
+  const placeOrderHandler = () => {
+    dispatch(
+      orderCreateAction({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
+      })
+    );
+  };
 
   return (
     <>
@@ -48,7 +89,7 @@ const PlaceOrderScreen = () => {
                   {cart.cartItems.map((item) => (
                     <ListGroup.Item key={item.id}>
                       <Row>
-                        <Col md={1}>
+                        <Col md={2} sm={8}>
                           <Link to={`/product/${item.id}`}>
                             <Image
                               src={item.image}
@@ -115,6 +156,9 @@ const PlaceOrderScreen = () => {
                 >
                   Разместить заказ
                 </Button>
+                <ListGroup.Item>
+                  {error && <Message variant="danger">{error}</Message>}
+                </ListGroup.Item>
               </ListGroup.Item>
             </ListGroup>
           </Card>
