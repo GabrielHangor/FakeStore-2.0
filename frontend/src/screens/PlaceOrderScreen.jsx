@@ -15,7 +15,7 @@ const PlaceOrderScreen = () => {
     0
   );
   const shippingPrice = itemsPrice > 100 ? 0 : 100;
-  const taxPrice = 0.15 * itemsPrice;
+  const taxPrice = 0.2 * itemsPrice;
   const totalPrice = itemsPrice + shippingPrice + taxPrice;
 
   const placeOrderHandler = () => {};
