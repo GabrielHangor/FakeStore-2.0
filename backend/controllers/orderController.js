@@ -36,4 +36,21 @@ const addOrderItems = expressAsyncHandler(async (req, res) => {
   res.status(201).json(createdOrder);
 });
 
-export { addOrderItems };
+// @description Get order by ID
+// @route GET /api/orders/:id
+// @access Private
+const getOrderById = expressAsyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate(
+    'user',
+    'name email'
+  );
+
+  if (!order) {
+    res.status(404);
+    throw new Error('Заказ не найден');
+  }
+
+  res.json(order);
+});
+
+export { addOrderItems, getOrderById };
