@@ -18,6 +18,12 @@ const OrderScreen = () => {
     dispatch(getOrderDetailsAction(params.id));
   }, []);
 
+  useEffect(() => {
+    if (!order || order._id !== params.id) {
+      dispatch(getOrderDetailsAction(params.id));
+    }
+  }, [order, params.id, dispatch]);
+
   // useEffect(() => {
   //   const timer = setTimeout(() => {
   //     if (error) {
