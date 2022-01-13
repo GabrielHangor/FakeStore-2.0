@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Message from './../components/Message';
 import { getOrderDetailsAction, payOrderAction } from '../actions/orderActions';
 import Loader from '../components/Loader';
