@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
@@ -21,13 +21,14 @@ const PlaceOrderScreen = () => {
   const { order, success, loading, error } = orderCreate;
 
   // Calculate prices
-  const itemsPrice = cart.cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
+  const itemsPrice = Number(
+    cart.cartItems
+      .reduce((acc, item) => acc + item.price * item.quantity, 0)
+      .toFixed(2)
   );
   const shippingPrice = itemsPrice > 100 ? 0 : 100;
-  const taxPrice = 0.2 * itemsPrice;
-  const totalPrice = itemsPrice + shippingPrice + taxPrice;
+  const taxPrice = Number((0.2 * itemsPrice).toFixed(2));
+  const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2));
 
   useEffect(() => {
     if (success) {
@@ -131,19 +132,19 @@ const PlaceOrderScreen = () => {
                 <ListGroup.Item>
                   <Row>
                     <Col>Позиции</Col>
-                    <Col>${itemsPrice.toFixed(2)}</Col>
+                    <Col>${itemsPrice}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
                     <Col>Доставка</Col>
-                    <Col>${shippingPrice.toFixed(2)}</Col>
+                    <Col>${shippingPrice}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
                     <Col>Налог 20%</Col>
-                    <Col>${taxPrice.toFixed(2)}</Col>
+                    <Col>${taxPrice}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
@@ -151,7 +152,7 @@ const PlaceOrderScreen = () => {
                     <Col>
                       <strong>Сумма</strong>
                     </Col>
-                    <Col>${totalPrice.toFixed(2)}</Col>
+                    <Col>${totalPrice}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>

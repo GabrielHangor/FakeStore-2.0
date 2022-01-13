@@ -7,6 +7,7 @@ export const ORDER_CREATE_CLEAN_SUCCESS = 'ORDER_CREATE_CLEAN_SUCCESS';
 export const ORDER_DETAILS_REQUEST = 'ORDER_DETAILS_REQUEST';
 export const ORDER_DETAILS_SUCCESS = 'ORDER_DETAILS_SUCCESS';
 export const ORDER_DETAILS_FAIL = 'ORDER_DETAILS_FAIL';
+export const ORDER_DETAILS_RESET = 'ORDER_DETAILS_RESET';
 
 export const ORDER_PAY_REQUEST = 'ORDER_PAY_REQUEST';
 export const ORDER_PAY_SUCCESS = 'ORDER_PAY_SUCCESS';
@@ -41,6 +42,8 @@ export const orderDetailsReducer = (
       return { loading: false, order: action.payload };
     case ORDER_DETAILS_FAIL:
       return { loading: false, error: action.payload };
+    case ORDER_DETAILS_RESET:
+      return { loading: true, orderItems: [], shippingAddress: {} };
     default:
       return state;
   }
