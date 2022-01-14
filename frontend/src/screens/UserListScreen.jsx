@@ -6,22 +6,50 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from './../components/Message';
 import Loader from './../components/Loader';
 import { listUsersAction } from '../actions/userActions';
+import { deleteUserAction } from './../actions/userActions';
+import { USER_DELETE_SUCCESS_RESET } from '../reducers/userReducers';
 
 const UserListScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
 
-  useEffect(() => {
-    dispatch(listUsersAction());
-  }, [dispatch]);
+  const userDelete = useSelector((state) => state.userDelete);
+  const { success, message } = userDelete;
 
-  const deleteHandler = () => {};
+  useEffect(() => {
+    if (userInfo && userInfo.isAdmin) {
+      dispatch(listUsersAction());
+    } else {
+      navigate('/login');
+    }
+  }, [dispatch, navigate, userInfo, success]);
+
+  const deleteHandler = (id) => {
+    if (window.confirm('Удалить пользователя?')) {
+      dispatch(deleteUserAction(id));
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (success) {
+        dispatch({ type: USER_DELETE_SUCCESS_RESET });
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [success, dispatch]);
 
   return (
     <>
       <h1>Список пользователей</h1>
+      {message && <Message variant="success">{message.message}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
@@ -58,7 +86,7 @@ const UserListScreen = () => {
                   </LinkContainer>
                   <Button
                     variant="danger"
-                    className="btn-sm "
+                    className="btn-sm"
                     onClick={() => deleteHandler(user._id)}
                   >
                     <i className="fas fa-trash"></i>
