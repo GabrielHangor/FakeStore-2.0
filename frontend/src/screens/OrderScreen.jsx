@@ -36,19 +36,17 @@ const OrderScreen = () => {
       document.body.appendChild(script);
     };
 
-    if (!order || success) {
+    if (!order || success || order._id !== params.id) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch(getOrderDetailsAction(params.id));
     } else if (!order.isPaid) {
-      !window.paypal ? addPayPalScript() : setSdkReady(true);
+      if (!window.paypal) {
+        addPayPalScript();
+      } else {
+        setSdkReady(true);
+      }
     }
   }, [dispatch, params.id, success, order]);
-
-  // useEffect(() => {
-  //   if (!order || order._id !== params.id) {
-  //     dispatch(getOrderDetailsAction(params.id));
-  //   }
-  // }, [order, params.id, dispatch]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -61,7 +59,6 @@ const OrderScreen = () => {
   }, [error, dispatch]);
 
   const successPaymentHandler = (paymentResult) => {
-    // console.log(paymentResult);
     dispatch(payOrderAction(params.id, paymentResult));
   };
 

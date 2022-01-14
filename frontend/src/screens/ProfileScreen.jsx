@@ -39,11 +39,12 @@ const ProfileScreen = () => {
 
     if (!user || !user.name) {
       dispatch(getUserDetailsAction('profile'));
-      dispatch(listOrdersAction());
     } else {
       setName(user.name);
       setEmail(user.email);
     }
+
+    dispatch(listOrdersAction());
   }, [userInfo, user, dispatch, navigate]);
 
   useEffect(() => {
