@@ -15,6 +15,7 @@ import {
   USER_DETAILS_RESET,
 } from './../reducers/userReducers';
 import axios from 'axios';
+import { ORDER_LIST_RESET } from '../reducers/orderReducers';
 
 export const loginAction = (email, password) => async (dispatch) => {
   try {
@@ -44,7 +45,7 @@ export const logoutAction = () => async (dispatch) => {
   localStorage.removeItem('userInfo');
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
-  // dispatch({ type: ORDER_LIST_MY_RESET })
+  dispatch({ type: ORDER_LIST_RESET });
   // dispatch({ type: USER_LIST_RESET })
 };
 

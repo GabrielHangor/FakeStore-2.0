@@ -17,6 +17,7 @@ export const ORDER_PAY_RESET = 'ORDER_PAY_RESET';
 export const ORDER_LIST_REQUEST = 'ORDER_LIST_REQUEST';
 export const ORDER_LIST_SUCCESS = 'ORDER_LIST_SUCCESS';
 export const ORDER_LIST_FAIL = 'ORDER_LIST_FAIL';
+export const ORDER_LIST_RESET = 'ORDER_LIST_RESET';
 
 export const orderCreateReducer = (state = {}, action) => {
   switch (action.type) {
@@ -76,6 +77,8 @@ export const orderListReducer = (state = { orders: [] }, action) => {
       return { loading: false, orders: action.payload };
     case ORDER_LIST_FAIL:
       return { loading: false, error: action.payload };
+    case ORDER_LIST_RESET:
+      return { orders: [] };
     default:
       return state;
   }

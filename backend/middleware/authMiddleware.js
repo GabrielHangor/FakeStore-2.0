@@ -29,4 +29,13 @@ const protectRoute = expressAsyncHandler(async (req, res, next) => {
   }
 });
 
-export { protectRoute };
+const verifyAdmin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next();
+  }
+
+  res.status(401);
+  throw new Error('Пользователь не является администратором');
+};
+
+export { protectRoute, verifyAdmin };
