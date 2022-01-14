@@ -32,10 +32,10 @@ const protectRoute = expressAsyncHandler(async (req, res, next) => {
 const verifyAdmin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
+  } else {
+    res.status(401);
+    throw new Error('Пользователь не является администратором');
   }
-
-  res.status(401);
-  throw new Error('Пользователь не является администратором');
 };
 
 export { protectRoute, verifyAdmin };
