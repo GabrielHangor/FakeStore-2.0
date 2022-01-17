@@ -23,7 +23,7 @@ const UserListScreen = () => {
   const { success, message } = userDelete;
 
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
+    if (userInfo?.isAdmin) {
       dispatch(listUsersAction());
     } else {
       navigate('/login');
@@ -61,7 +61,7 @@ const UserListScreen = () => {
               <th>ID</th>
               <th>Имя</th>
               <th>Email</th>
-              <th>Админ</th>
+              <th>Администратор</th>
               <th></th>
             </tr>
           </thead>
@@ -87,6 +87,7 @@ const UserListScreen = () => {
                   <Button
                     variant="danger"
                     className="btn-sm"
+                    disabled={user.isAdmin}
                     onClick={() => deleteHandler(user._id)}
                   >
                     <i className="fas fa-trash"></i>
