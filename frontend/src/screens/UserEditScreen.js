@@ -5,7 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from './../components/Message';
 import Loader from './../components/Loader';
 import FormContainer from '../components/FormContainer';
-import { getUserDetailsAction } from '../actions/userActions';
+import {
+  getUserDetailsAction,
+  updateUserAdminAction,
+} from '../actions/userActions';
+import { USER_UPDATE_RESET } from '../reducers/userReducers';
 
 const UserEditScreen = () => {
   const [name, setName] = useState('');
@@ -13,11 +17,18 @@ const UserEditScreen = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const params = useParams();
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
+
+  const userUpdate = useSelector((state) => state.userUpdate);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = userUpdate;
 
   useEffect(() => {
     if (!user?.name || user._id !== params.id) {
@@ -29,18 +40,36 @@ const UserEditScreen = () => {
     }
   }, [user, dispatch, params.id]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (successUpdate) {
+        dispatch({ type: USER_UPDATE_RESET });
+        navigate('/admin/userlist');
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [successUpdate, dispatch, navigate]);
+
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch(updateUserAdminAction({ _id: params.id, name, email, isAdmin }));
   };
 
   return (
     <>
+      {successUpdate && (
+        <Message variant="success">
+          Данные пользователя успешно обновлены
+        </Message>
+      )}
       <Link to="/admin/userlist" className="btn btn-light my-3">
         Назад
       </Link>
       <FormContainer>
         <h1>Редактирование данных пользователя</h1>
-        {loading ? (
+        {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
+        {loading || loadingUpdate ? (
           <Loader />
         ) : error ? (
           <Message variant="danger">{error}</Message>
@@ -72,7 +101,6 @@ const UserEditScreen = () => {
 
             <Form.Group controlId="isadmin">
               <Form.Check
-                required
                 className="mb-2"
                 type="checkbox"
                 label="Сделать администратором?"
