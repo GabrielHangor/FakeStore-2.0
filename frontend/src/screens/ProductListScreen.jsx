@@ -6,10 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from './../components/Message';
 import Loader from './../components/Loader';
 import {
+  createProductAction,
   deleteProductAction,
   listProductsAction,
 } from '../actions/productActions';
-import { PRODUCT_DELETE_RESET } from './../reducers/productReducers';
+import {
+  PRODUCT_DELETE_RESET,
+  PRODUCT_CREATE_RESET,
+} from './../reducers/productReducers';
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
@@ -28,23 +32,31 @@ const ProductListScreen = () => {
     success: successDelete,
   } = productDelete;
 
-  useEffect(() => {
-    if (userInfo?.isAdmin) {
-      dispatch(listProductsAction());
-    } else {
-      navigate('/login');
-    }
-  }, [dispatch, navigate, userInfo, successDelete]);
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    // product: createdProduct,
+  } = productCreate;
 
   useEffect(() => {
+    if (!userInfo?.isAdmin) navigate('/login');
+    dispatch(listProductsAction());
+  }, [dispatch, navigate, userInfo]);
+
+  useEffect(() => {
+    if (successDelete || successCreate) dispatch(listProductsAction());
+
     const timer = setTimeout(() => {
-      if (successDelete) {
+      if (successDelete || successCreate) {
         dispatch({ type: PRODUCT_DELETE_RESET });
+        dispatch({ type: PRODUCT_CREATE_RESET });
       }
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [successDelete, dispatch]);
+  }, [successCreate, successDelete, dispatch]);
 
   const deleteHandler = (id) => {
     if (window.confirm('Подтвердите действие')) {
@@ -52,7 +64,9 @@ const ProductListScreen = () => {
     }
   };
 
-  const createProductHandler = () => {};
+  const createProductHandler = () => {
+    dispatch(createProductAction());
+  };
 
   return (
     <>
@@ -66,12 +80,17 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
-      {loadingDelete && <Loader />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {successDelete && (
         <Message variant="success">Товар успешно удален из базы данных</Message>
       )}
-      {loading ? (
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+      {successCreate && (
+        <Message variant="success">
+          Новый товар успешно добавлен в базу данных
+        </Message>
+      )}
+      {loading || loadingDelete || loadingCreate ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
@@ -94,7 +113,7 @@ const ProductListScreen = () => {
                 <td>${product.price}</td>
                 <td>{product.category}</td>
                 <td>{product.brand}</td>
-                <td>
+                <td className=" d-flex justify-content-around">
                   <LinkContainer to={`/admin/product/${product._id}/edit`}>
                     <Button variant="primary" className=" btn-sm">
                       <i className="fas fa-edit"></i>

@@ -12,6 +12,11 @@ export const PRODUCT_DELETE_SUCCESS = 'PRODUCT_DELETE_SUCCESS';
 export const PRODUCT_DELETE_FAIL = 'PRODUCT_DELETE_FAIL';
 export const PRODUCT_DELETE_RESET = 'PRODUCT_DELETE_RESET';
 
+export const PRODUCT_CREATE_REQUEST = 'PRODUCT_CREATE_REQUEST';
+export const PRODUCT_CREATE_SUCCESS = 'PRODUCT_CREATE_SUCCESS';
+export const PRODUCT_CREATE_FAIL = 'PRODUCT_CREATE_FAIL';
+export const PRODUCT_CREATE_RESET = 'PRODUCT_CREATE_RESET';
+
 export const productListReducer = (state = { products: [] }, action) => {
   switch (action.type) {
     case PRODUCT_LIST_REQUEST:
@@ -53,6 +58,21 @@ export const productDeleteReducer = (state = {}, action) => {
     case PRODUCT_DELETE_FAIL:
       return { loading: false, error: action.payload };
     case PRODUCT_DELETE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const productCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_CREATE_REQUEST:
+      return { loading: true };
+    case PRODUCT_CREATE_SUCCESS:
+      return { loading: false, success: true, product: action.payload };
+    case PRODUCT_CREATE_FAIL:
+      return { loading: false, error: action.payload };
+    case PRODUCT_CREATE_RESET:
       return {};
     default:
       return state;
