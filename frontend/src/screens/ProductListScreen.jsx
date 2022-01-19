@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from './../components/Message';
 import Loader from './../components/Loader';
-import { listProductsAction } from '../actions/productActions';
+import {
+  deleteProductAction,
+  listProductsAction,
+} from '../actions/productActions';
+import { PRODUCT_DELETE_RESET } from './../reducers/productReducers';
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params = useParams();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -18,17 +21,34 @@ const ProductListScreen = () => {
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
 
+  const productDelete = useSelector((state) => state.productDelete);
+  const {
+    loading: loadingDelete,
+    error: errorDelete,
+    success: successDelete,
+  } = productDelete;
+
   useEffect(() => {
     if (userInfo?.isAdmin) {
       dispatch(listProductsAction());
     } else {
       navigate('/login');
     }
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo, successDelete]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (successDelete) {
+        dispatch({ type: PRODUCT_DELETE_RESET });
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [successDelete, dispatch]);
 
   const deleteHandler = (id) => {
     if (window.confirm('Подтвердите действие')) {
-      // DELETE PRODUCT
+      dispatch(deleteProductAction(id));
     }
   };
 
@@ -46,12 +66,17 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
+      {loadingDelete && <Loader />}
+      {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+      {successDelete && (
+        <Message variant="success">Товар успешно удален из базы данных</Message>
+      )}
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped bordered hover responsive="sm" className="table-sm">
+        <Table striped bordered hover responsive="md">
           <thead>
             <tr>
               <th>ID</th>
