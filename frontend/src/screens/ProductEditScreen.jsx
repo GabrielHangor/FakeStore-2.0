@@ -5,7 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from './../components/Message';
 import Loader from './../components/Loader';
 import FormContainer from '../components/FormContainer';
-import { listProductDetailsAction } from '../actions/productActions';
+import {
+  listProductDetailsAction,
+  updateProductAction,
+} from '../actions/productActions';
+import {
+  PRODUCT_DETAILS_RESET,
+  PRODUCT_UPDATE_RESET,
+} from '../reducers/productReducers';
 
 const ProductEditScreen = () => {
   const [name, setName] = useState('');
@@ -20,8 +27,22 @@ const ProductEditScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
+
+  const productUpdate = useSelector((state) => state.productUpdate);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = productUpdate;
+
+  useEffect(() => {
+    if (!userInfo?.isAdmin) navigate('/login');
+  }, [dispatch, navigate, userInfo]);
 
   useEffect(() => {
     if (!product.name || product._id !== params.id) {
@@ -37,9 +58,32 @@ const ProductEditScreen = () => {
     }
   }, [dispatch, params.id, product]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (successUpdate) {
+        dispatch({ type: PRODUCT_UPDATE_RESET });
+        dispatch({ type: PRODUCT_DETAILS_RESET });
+        navigate('/admin/productlist');
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [successUpdate, dispatch, navigate]);
+
   const submitHandler = (e) => {
     e.preventDefault();
-    // UPDATE PRODUCT
+    dispatch(
+      updateProductAction({
+        _id: params.id,
+        name,
+        price,
+        image,
+        brand,
+        category,
+        description,
+        countInStock,
+      })
+    );
   };
 
   return (
@@ -49,10 +93,15 @@ const ProductEditScreen = () => {
       </Link>
       <FormContainer>
         <h1>Редактирование данных товара</h1>
-        {loading ? (
+        {successUpdate && (
+          <Message variant="success">Данные товара успешно обновлены</Message>
+        )}
+        {loading || loadingUpdate ? (
           <Loader />
         ) : error ? (
           <Message variant="danger">{error}</Message>
+        ) : errorUpdate ? (
+          <Message variant="danger">{errorUpdate}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name">
