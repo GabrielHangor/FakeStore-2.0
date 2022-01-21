@@ -14,6 +14,9 @@ import {
   ORDER_LIST_ALL_REQUEST,
   ORDER_LIST_ALL_SUCCESS,
   ORDER_LIST_ALL_FAIL,
+  ORDER_DELIVER_REQUEST,
+  ORDER_DELIVER_SUCCESS,
+  ORDER_DELIVER_FAIL,
 } from './../reducers/orderReducers';
 import axios from 'axios';
 
@@ -150,6 +153,34 @@ export const listAllOrdersAction = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_LIST_ALL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deliverOrderAction = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_DELIVER_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.put(`/api/orders/${id}/deliver`, config);
+
+    dispatch({ type: ORDER_DELIVER_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: ORDER_DELIVER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

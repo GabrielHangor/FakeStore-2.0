@@ -23,6 +23,11 @@ export const ORDER_LIST_ALL_REQUEST = 'ORDER_LIST_ALL_REQUEST';
 export const ORDER_LIST_ALL_SUCCESS = 'ORDER_LIST_ALL_SUCCESS';
 export const ORDER_LIST_ALL_FAIL = 'ORDER_LIST_ALL_FAIL';
 
+export const ORDER_DELIVER_REQUEST = 'ORDER_DELIVER_REQUEST';
+export const ORDER_DELIVER_SUCCESS = 'ORDER_DELIVER_SUCCESS';
+export const ORDER_DELIVER_FAIL = 'ORDER_DELIVER_FAIL';
+export const ORDER_DELIVER_RESET = 'ORDER_DELIVER_RESET';
+
 export const orderCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case ORDER_CREATE_REQUEST:
@@ -96,6 +101,21 @@ export const orderListAllReducer = (state = { orders: [] }, action) => {
       return { loading: false, orders: action.payload };
     case ORDER_LIST_ALL_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const orderDeliverReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ORDER_DELIVER_REQUEST:
+      return { loading: true };
+    case ORDER_DELIVER_SUCCESS:
+      return { loading: false, success: true };
+    case ORDER_DELIVER_FAIL:
+      return { loading: false, error: action.payload };
+    case ORDER_DELIVER_RESET:
+      return {};
     default:
       return state;
   }

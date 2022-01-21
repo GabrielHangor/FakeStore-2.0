@@ -54,7 +54,7 @@ const getOrderById = expressAsyncHandler(async (req, res) => {
 });
 
 // @description Update order to paid
-// @route PUT /api/orders/:id
+// @route PUT /api/orders/:id/pay
 // @access Private
 const updateOrderToPaid = expressAsyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
@@ -94,10 +94,30 @@ const getAllOrders = expressAsyncHandler(async (req, res) => {
   res.json(orders);
 });
 
+// @description Update order to delivered
+// @route PUT /api/orders/:id/deliver
+// @access Private/Admin
+const updateOrderToDelivered = expressAsyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(404);
+    throw new Error('Заказ не найден');
+  }
+
+  order.isDelivered = true;
+  order.deliveredAt = Date.now();
+
+  const updatedOrder = await order.save();
+
+  res.json(updatedOrder);
+});
+
 export {
   addOrderItems,
   getOrderById,
   updateOrderToPaid,
+  updateOrderToDelivered,
   getMyOrders,
   getAllOrders,
 };
