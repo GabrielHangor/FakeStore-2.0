@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,16 +14,20 @@ import {
   PRODUCT_DELETE_RESET,
   PRODUCT_CREATE_RESET,
 } from './../reducers/productReducers';
+import Paginate from '../components/Paginate';
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const params = useParams();
+
+  const pageNumber = params.pageNumber || 1;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, page, pages } = productList;
 
   const productDelete = useSelector((state) => state.productDelete);
   const {
@@ -42,8 +46,8 @@ const ProductListScreen = () => {
 
   useEffect(() => {
     if (!userInfo?.isAdmin) navigate('/login');
-    dispatch(listProductsAction());
-  }, [dispatch, navigate, userInfo]);
+    dispatch(listProductsAction('', pageNumber));
+  }, [dispatch, navigate, userInfo, pageNumber]);
 
   useEffect(() => {
     if (successDelete || successCreate) dispatch(listProductsAction());
@@ -95,42 +99,45 @@ const ProductListScreen = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped bordered hover responsive="md">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Наименование</th>
-              <th>Цена</th>
-              <th>Категория</th>
-              <th>Бренд</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr className="align-middle" key={product._id}>
-                <td>{product._id}</td>
-                <td>{product.name}</td>
-                <td>${product.price}</td>
-                <td>{product.category}</td>
-                <td>{product.brand}</td>
-                <td className=" d-flex justify-content-around">
-                  <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                    <Button variant="primary" className=" btn-sm">
-                      <i className="fas fa-edit"></i>
-                    </Button>
-                  </LinkContainer>
-                  <Button
-                    variant="danger"
-                    className="btn-sm"
-                    onClick={() => deleteHandler(product._id)}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </Button>
-                </td>
+        <>
+          <Table striped bordered hover responsive="md">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Наименование</th>
+                <th>Цена</th>
+                <th>Категория</th>
+                <th>Бренд</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr className="align-middle" key={product._id}>
+                  <td>{product._id}</td>
+                  <td>{product.name}</td>
+                  <td>${product.price}</td>
+                  <td>{product.category}</td>
+                  <td>{product.brand}</td>
+                  <td className=" d-flex justify-content-around">
+                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
+                      <Button variant="primary" className=" btn-sm">
+                        <i className="fas fa-edit"></i>
+                      </Button>
+                    </LinkContainer>
+                    <Button
+                      variant="danger"
+                      className="btn-sm"
+                      onClick={() => deleteHandler(product._id)}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          <Paginate pages={pages} page={page} isAdmin={true} />
+        </>
       )}
     </>
   );

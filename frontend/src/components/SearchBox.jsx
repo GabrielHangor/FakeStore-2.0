@@ -9,7 +9,7 @@ const SearchBox = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     if (keyword.trim()) {
-      navigate(`/search/${keyword}`);
+      navigate(`/search/${encodeURIComponent(keyword)}`);
     } else {
       navigate('/');
     }
