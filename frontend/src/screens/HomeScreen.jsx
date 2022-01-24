@@ -5,15 +5,20 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Product from '../components/Product';
 import { listProductsAction } from './../actions/productActions';
+import { useParams } from 'react-router-dom';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
+
+  const params = useParams();
+  const keyword = params.keyword;
+
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
 
   useEffect(() => {
-    dispatch(listProductsAction());
-  }, [dispatch]);
+    dispatch(listProductsAction(keyword));
+  }, [dispatch, keyword]);
 
   return (
     <>
