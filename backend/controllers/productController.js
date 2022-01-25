@@ -142,6 +142,20 @@ const createProductReview = expressAsyncHandler(async (req, res) => {
   res.status(201).json({ message: 'Отзыв добавлен' });
 });
 
+// @description Get top rated products
+// @route GET /api/products/top
+// @access Public
+const getTopProducts = expressAsyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+
+  if (!products) {
+    res.status(404);
+    throw new Error('Товары не найден');
+  }
+
+  res.json(products);
+});
+
 export {
   getProductById,
   getProducts,
@@ -149,4 +163,5 @@ export {
   createProduct,
   updateProduct,
   createProductReview,
+  getTopProducts,
 };
