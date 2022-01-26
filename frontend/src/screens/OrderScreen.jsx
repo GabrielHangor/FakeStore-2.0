@@ -16,6 +16,7 @@ import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
 } from '../reducers/orderReducers';
+import { CART_RESET } from '../reducers/cartReducers';
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
@@ -71,6 +72,7 @@ const OrderScreen = () => {
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrderAction(params.id, paymentResult));
+    dispatch({ type: CART_RESET });
   };
 
   const deliverHandler = () => {
