@@ -7,7 +7,7 @@ const Product = ({ product }) => {
   return (
     <Card className="my-3 rounded">
       <Link to={`/product/${product._id}`}>
-        <Card.Img src={product.image} variant="top" />
+        <Card.Img src={product.image} variant="top" className="mt-4" />
       </Link>
       <Card.Body>
         <Link to={`/product/${product._id}`}>
@@ -22,7 +22,9 @@ const Product = ({ product }) => {
             color={'#ffc565'}
           />
         </Card.Text>
-        <Card.Text as="h3">${product.price}</Card.Text>
+        <Card.Text as="h2">
+          <strong>${product.price}</strong>
+        </Card.Text>
       </Card.Body>
     </Card>
   );

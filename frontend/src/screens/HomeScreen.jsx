@@ -5,9 +5,10 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Product from '../components/Product';
 import { listProductsAction } from './../actions/productActions';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
+import Meta from '../components/Meta';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -25,8 +26,15 @@ const HomeScreen = () => {
 
   return (
     <>
-      <h1>Популярные товары</h1>
-      {!keyword && <ProductCarousel />}
+      <Meta />
+      {!keyword && <h1>Популярные товары</h1>}
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
+        <Link to="/" className="btn btn-outline-dark my-3">
+          Назад
+        </Link>
+      )}
       <h1>Все товары</h1>
       {loading ? (
         <Loader />

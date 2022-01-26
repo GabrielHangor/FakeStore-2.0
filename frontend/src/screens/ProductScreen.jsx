@@ -21,6 +21,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { addToCartAction } from './../actions/cartActions';
 import { PRODUCT_CREATE_REVIEW_RESET } from '../reducers/productReducers';
+import Meta from '../components/Meta';
 
 const ProductScreen = () => {
   const [quantity, setQuantity] = useState(1);
@@ -94,7 +95,7 @@ const ProductScreen = () => {
           </h3>
         </Modal.Body>
       </Modal>
-      <Link className="btn btn-light my-3" to="/">
+      <Link className="btn btn-outline-primary my-3" to="/">
         К списку товаров
       </Link>
       {succesProductReview && (
@@ -109,6 +110,7 @@ const ProductScreen = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
+          <Meta title={product.name} />
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />
@@ -181,6 +183,7 @@ const ProductScreen = () => {
                       disabled={product.countInStock === 0}
                       size="lg"
                       type="button"
+                      variant="outline-primary"
                     >
                       Добавить в корзину
                     </Button>
@@ -237,7 +240,7 @@ const ProductScreen = () => {
                           onChange={(e) => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
-                      <Button type="submit" variant="primary">
+                      <Button type="submit" variant="outline-primary">
                         Оставить комментарий
                       </Button>
                     </Form>

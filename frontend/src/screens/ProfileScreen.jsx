@@ -134,7 +134,7 @@ const ProfileScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="outline-primary">
               Изменить
             </Button>
           </Form>
@@ -181,7 +181,10 @@ const ProfileScreen = () => {
                   </td>
                   <td>
                     <LinkContainer to={`/order/${order._id}`}>
-                      <Button className="btn-sm w-100" variant="primary">
+                      <Button
+                        className="btn-sm w-100"
+                        variant="outline-primary"
+                      >
                         Информация
                       </Button>
                     </LinkContainer>

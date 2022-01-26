@@ -161,6 +161,7 @@ const PlaceOrderScreen = () => {
                     className="w-100"
                     disabled={cart.cartItems.length === 0 || success}
                     onClick={placeOrderHandler}
+                    variant="outline-primary"
                   >
                     Разместить заказ
                   </Button>

@@ -32,7 +32,7 @@ const CartScreen = () => {
     <Row>
       <Col md={8}>
         <h1>Корзина</h1>
-        <Link className="btn btn-light my-2" to="/">
+        <Link className="btn btn-outline-primary my-2" to="/">
           К списку товаров
         </Link>
         {cartItems.length === 0 ? (
@@ -107,6 +107,7 @@ const CartScreen = () => {
                 className="btn-block w-100"
                 disabled={cartItems.length === 0}
                 onClick={checkOutHandler}
+                variant="outline-primary"
               >
                 Перейти к оформлению заказа
               </Button>

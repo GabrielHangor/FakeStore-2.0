@@ -113,7 +113,7 @@ const ProductEditScreen = () => {
 
   return (
     <>
-      <Link to="/admin/productlist" className="btn btn-light my-3">
+      <Link to="/admin/productlist" className="btn btn-outline-primary my-3">
         Назад
       </Link>
       <FormContainer>
@@ -212,7 +212,7 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type="submit" variant="primary" className="w-100">
+            <Button type="submit" variant="outline-primary" className="w-100">
               Обновить данные
             </Button>
           </Form>

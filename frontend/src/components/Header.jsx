@@ -16,13 +16,15 @@ const Header = () => {
     <header>
       <Navbar bg="light" expand="lg" collapseOnSelect>
         <Container>
-          <LinkContainer to="/">
-            <Navbar.Brand>FakeStore 2.0</Navbar.Brand>
-          </LinkContainer>
+          <Navbar.Brand>FakeStore 2.0</Navbar.Brand>
+
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <SearchBox />
             <Nav className="ms-auto">
+              <LinkContainer to="/">
+                <Nav.Link active={false}>На главную</Nav.Link>
+              </LinkContainer>
               <LinkContainer to="/cart">
                 <Nav.Link active={false}>
                   <i className="fas  fa-shopping-cart px-2"></i>

@@ -24,7 +24,7 @@ const SearchBox = () => {
         placeholder="Найти товар..."
         className="mx-2"
       ></Form.Control>
-      <Button type="submit" variant="outline-success" className="ml-5">
+      <Button type="submit" variant="outline-primary" className="ml-5">
         Search
       </Button>
     </Form>
